@@ -2,27 +2,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class BancoSistema extends JFrame {
 
     private JPanel mainPanel;
+    private JPanel telaCadastroCliente;
+    private JPanel telaCadastroGerente;
 
     private Map<Integer, ContaBancaria> contas;
+    private List<Gerente> gerentes;
 
     public BancoSistema() {
         // Configurações do JFrame
         setTitle("Sistema Bancário");
-        setSize(600, 400); // Aumentei o tamanho da janela para melhor acomodar os campos maiores
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centraliza a janela na tela
+        setLocationRelativeTo(null);
 
         mainPanel = new JPanel();
         mainPanel.setLayout(new CardLayout());
 
         contas = new HashMap<>();
+        gerentes = new ArrayList<>();
 
         // Tela inicial
         JPanel telaInicial = new JPanel(new GridBagLayout());
@@ -31,6 +36,7 @@ public class BancoSistema extends JFrame {
 
         JButton clienteButton = new JButton("Cliente");
         JButton gerenteButton = new JButton("Gerente");
+        JButton diretorButton = new JButton("Diretor"); // Novo botão
 
         gbcInicial.gridx = 0;
         gbcInicial.gridy = 0;
@@ -39,6 +45,9 @@ public class BancoSistema extends JFrame {
         gbcInicial.gridx = 1;
         telaInicial.add(gerenteButton, gbcInicial);
 
+        gbcInicial.gridx = 2; // Posicionando o botão "Diretor"
+        telaInicial.add(diretorButton, gbcInicial);
+
         mainPanel.add(telaInicial, "Tela Inicial");
 
         // Tela do Cliente
@@ -46,7 +55,7 @@ public class BancoSistema extends JFrame {
         GridBagConstraints gbcCliente = new GridBagConstraints();
         gbcCliente.insets = new Insets(10, 10, 10, 10);
 
-        JButton consultarContaClienteButton = new JButton("Consultar Conta"); // Botão de consultar conta para o cliente
+        JButton consultarContaClienteButton = new JButton("Consultar Conta");
         JButton voltarClienteButton = new JButton("Voltar");
 
         gbcCliente.gridx = 0;
@@ -81,21 +90,31 @@ public class BancoSistema extends JFrame {
         mainPanel.add(telaGerente, "Tela Gerente");
 
         // Tela de Cadastro de Cliente
-        JPanel telaCadastroCliente = new JPanel(new GridBagLayout());
+        telaCadastroCliente = new JPanel(new GridBagLayout()); // Inicialização do painel de cadastro de cliente
         GridBagConstraints gbcCadastroCliente = new GridBagConstraints();
         gbcCadastroCliente.insets = new Insets(10, 10, 10, 10);
 
         JLabel nomeClienteLabel = new JLabel("Nome:");
-        JTextField nomeClienteField = new JTextField(20); // Aumentei para 20 caracteres
+        JTextField nomeClienteField = new JTextField(20);
+
+        JLabel enderecoLabel = new JLabel("Endereço:");
+        JTextField enderecoField = new JTextField(20);
+
+        JLabel rgLabel = new JLabel("RG:");
+        JTextField rgField = new JTextField(12);
 
         JLabel cpfLabel = new JLabel("CPF:");
         JTextField cpfField = new JTextField(11);
 
         JLabel telefoneLabel = new JLabel("Telefone:");
-        JTextField telefoneField = new JTextField(12); // Aumentei para 12 caracteres
+        JTextField telefoneField = new JTextField(12);
 
-        JLabel cepLabel = new JLabel("CEP:");
-        JTextField cepField = new JTextField(8);
+        JLabel gerenteLabel = new JLabel("Gerente:");
+        JComboBox<String> gerenteComboBox = new JComboBox<>();
+
+        for (Gerente gerente : gerentes) {
+            gerenteComboBox.addItem(gerente.getNome());
+        }
 
         JButton cadastrarClienteFinalButton = new JButton("Cadastrar");
         JButton voltarCadastroClienteButton = new JButton("Voltar");
@@ -108,26 +127,37 @@ public class BancoSistema extends JFrame {
 
         gbcCadastroCliente.gridx = 0;
         gbcCadastroCliente.gridy = 1;
+        telaCadastroCliente.add(enderecoLabel, gbcCadastroCliente);
+        gbcCadastroCliente.gridx = 1;
+        telaCadastroCliente.add(enderecoField, gbcCadastroCliente);
+
+        gbcCadastroCliente.gridx = 0;
+        gbcCadastroCliente.gridy = 2;
+        telaCadastroCliente.add(rgLabel, gbcCadastroCliente);
+        gbcCadastroCliente.gridx = 1;
+        telaCadastroCliente.add(rgField, gbcCadastroCliente);
+
+        gbcCadastroCliente.gridx = 0;
+        gbcCadastroCliente.gridy = 3;
         telaCadastroCliente.add(cpfLabel, gbcCadastroCliente);
         gbcCadastroCliente.gridx = 1;
         telaCadastroCliente.add(cpfField, gbcCadastroCliente);
 
         gbcCadastroCliente.gridx = 0;
-        gbcCadastroCliente.gridy = 2;
+        gbcCadastroCliente.gridy = 4;
         telaCadastroCliente.add(telefoneLabel, gbcCadastroCliente);
         gbcCadastroCliente.gridx = 1;
         telaCadastroCliente.add(telefoneField, gbcCadastroCliente);
 
         gbcCadastroCliente.gridx = 0;
-        gbcCadastroCliente.gridy = 3;
-        telaCadastroCliente.add(cepLabel, gbcCadastroCliente);
+        gbcCadastroCliente.gridy = 5;
+        telaCadastroCliente.add(gerenteLabel, gbcCadastroCliente);
         gbcCadastroCliente.gridx = 1;
-        telaCadastroCliente.add(cepField, gbcCadastroCliente);
+        telaCadastroCliente.add(gerenteComboBox, gbcCadastroCliente);
 
         gbcCadastroCliente.gridx = 0;
-        gbcCadastroCliente.gridy = 4;
+        gbcCadastroCliente.gridy = 6;
         telaCadastroCliente.add(cadastrarClienteFinalButton, gbcCadastroCliente);
-
         gbcCadastroCliente.gridx = 1;
         telaCadastroCliente.add(voltarCadastroClienteButton, gbcCadastroCliente);
 
@@ -138,47 +168,41 @@ public class BancoSistema extends JFrame {
         GridBagConstraints gbcCadastroConta = new GridBagConstraints();
         gbcCadastroConta.insets = new Insets(10, 10, 10, 10);
 
+        JLabel clienteContaLabel = new JLabel("Cliente:");
+        JComboBox<String> clienteContaComboBox = new JComboBox<>();
+
         JLabel tipoContaLabel = new JLabel("Tipo de Conta:");
-        JRadioButton contaCorrenteButton = new JRadioButton("Conta Corrente");
-        JRadioButton poupancaButton = new JRadioButton("Poupança");
+        JComboBox<String> tipoContaComboBox = new JComboBox<>(new String[]{"Conta Corrente", "Poupança"});
 
-        ButtonGroup tipoContaGroup = new ButtonGroup();
-        tipoContaGroup.add(contaCorrenteButton);
-        tipoContaGroup.add(poupancaButton);
-
-        JLabel nomeClienteContaLabel = new JLabel("Nome do Cliente:");
-        JTextField nomeClienteContaField = new JTextField(20); // Aumentei para 20 caracteres
-
-        JLabel numeroAgenciaLabel = new JLabel("Número da Agência:");
-        JTextField numeroAgenciaField = new JTextField(12); // Aumentei para 12 caracteres
+        JLabel agenciaLabel = new JLabel("Número da Agência:");
+        JTextField agenciaField = new JTextField(10);
 
         JLabel numeroContaLabel = new JLabel("Número da Conta:");
-        JTextField numeroContaField = new JTextField(12); // Aumentei para 12 caracteres
+        JTextField numeroContaField = new JTextField(10);
 
         JButton cadastrarContaFinalButton = new JButton("Cadastrar");
         JButton voltarCadastroContaButton = new JButton("Voltar");
 
+        JLabel saldoLabel = new JLabel("Saldo:");
+        JTextField saldoField = new JTextField(10);
+
         gbcCadastroConta.gridx = 0;
         gbcCadastroConta.gridy = 0;
-        telaCadastroConta.add(tipoContaLabel, gbcCadastroConta);
-
+        telaCadastroConta.add(clienteContaLabel, gbcCadastroConta);
         gbcCadastroConta.gridx = 1;
-        telaCadastroConta.add(contaCorrenteButton, gbcCadastroConta);
-
-        gbcCadastroConta.gridx = 2;
-        telaCadastroConta.add(poupancaButton, gbcCadastroConta);
+        telaCadastroConta.add(clienteContaComboBox, gbcCadastroConta);
 
         gbcCadastroConta.gridx = 0;
         gbcCadastroConta.gridy = 1;
-        telaCadastroConta.add(nomeClienteContaLabel, gbcCadastroConta);
+        telaCadastroConta.add(tipoContaLabel, gbcCadastroConta);
         gbcCadastroConta.gridx = 1;
-        telaCadastroConta.add(nomeClienteContaField, gbcCadastroConta);
+        telaCadastroConta.add(tipoContaComboBox, gbcCadastroConta);
 
         gbcCadastroConta.gridx = 0;
         gbcCadastroConta.gridy = 2;
-        telaCadastroConta.add(numeroAgenciaLabel, gbcCadastroConta);
+        telaCadastroConta.add(agenciaLabel, gbcCadastroConta);
         gbcCadastroConta.gridx = 1;
-        telaCadastroConta.add(numeroAgenciaField, gbcCadastroConta);
+        telaCadastroConta.add(agenciaField, gbcCadastroConta);
 
         gbcCadastroConta.gridx = 0;
         gbcCadastroConta.gridy = 3;
@@ -189,241 +213,125 @@ public class BancoSistema extends JFrame {
         gbcCadastroConta.gridx = 0;
         gbcCadastroConta.gridy = 4;
         telaCadastroConta.add(cadastrarContaFinalButton, gbcCadastroConta);
-
         gbcCadastroConta.gridx = 1;
         telaCadastroConta.add(voltarCadastroContaButton, gbcCadastroConta);
 
+        gbcCadastroConta.gridx = 0;
+        gbcCadastroConta.gridy = 5;
+        telaCadastroConta.add(saldoLabel, gbcCadastroConta);
+        gbcCadastroConta.gridx = 1;
+        telaCadastroConta.add(saldoField, gbcCadastroConta);
+
         mainPanel.add(telaCadastroConta, "Tela Cadastro Conta");
 
-        // Tela de Consulta de Conta
-        JPanel telaConsultaConta = new JPanel(new GridBagLayout());
-        GridBagConstraints gbcConsultaConta = new GridBagConstraints();
-        gbcConsultaConta.insets = new Insets(10, 10, 10, 10);
-
-        JLabel idContaLabel = new JLabel("ID da Conta:");
-        JTextField idContaField = new JTextField(10);
-
-        JButton consultarContaFinalButton = new JButton("Consultar");
-        JButton voltarConsultaContaButton = new JButton("Voltar");
-
-        gbcConsultaConta.gridx = 0;
-        gbcConsultaConta.gridy = 0;
-        telaConsultaConta.add(idContaLabel, gbcConsultaConta);
-
-        gbcConsultaConta.gridx = 1;
-        telaConsultaConta.add(idContaField, gbcConsultaConta);
-
-        gbcConsultaConta.gridx = 0;
-        gbcConsultaConta.gridy = 1;
-        telaConsultaConta.add(consultarContaFinalButton, gbcConsultaConta);
-
-        gbcConsultaConta.gridx = 1;
-        telaConsultaConta.add(voltarConsultaContaButton, gbcConsultaConta);
-
-        mainPanel.add(telaConsultaConta, "Tela Consulta Conta");
-
-        // Adicionando o painel principal ao JFrame
-        add(mainPanel);
-
-        // Ações dos botões
-
+        // Adicionando os ActionListeners para os botões da tela inicial
         clienteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Cliente");
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Cliente");
             }
         });
 
         gerenteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Gerente");
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Gerente");
             }
         });
 
-        cadastrarClienteButton.addActionListener(new ActionListener() {
+        diretorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Cadastro Cliente");
+                // Implementar ação para o botão Diretor
             }
         });
 
-        cadastrarContaButton.addActionListener(new ActionListener() {
+        // Adicionando os ActionListeners para os botões da tela do cliente
+        voltarClienteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Cadastro Conta");
-            }
-        });
-
-        voltarGerenteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Inicial");
-            }
-        });
-
-        voltarCadastroClienteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Gerente");
-            }
-        });
-
-        voltarCadastroContaButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Gerente");
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Inicial");
             }
         });
 
         consultarContaClienteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Consulta Conta");
+                // Implementar ação para consultar conta do cliente
             }
         });
 
-        voltarClienteButton.addActionListener(new ActionListener() {
+        // Adicionando os ActionListeners para os botões da tela do gerente
+        voltarGerenteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Inicial");
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Inicial");
             }
         });
 
-        consultarContaFinalButton.addActionListener(new ActionListener() {
+        cadastrarClienteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    int idConta = Integer.parseInt(idContaField.getText());
-                    if (contas.containsKey(idConta)) {
-                        ContaBancaria conta = contas.get(idConta);
-                        String mensagem = "Informações da Conta:\n" +
-                                "ID da Conta: " + conta.getId() + "\n" +
-                                "Tipo de Conta: " + conta.getTipoConta() + "\n" +
-                                "Nome do Cliente: " + conta.getNomeCliente() + "\n" +
-                                "Número da Agência: " + conta.getNumeroAgencia() + "\n" +
-                                "Número da Conta: " + conta.getNumeroConta();
-
-                        JOptionPane.showMessageDialog(BancoSistema.this, mensagem, "Consulta de Conta", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(BancoSistema.this, "Conta não encontrada.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(BancoSistema.this, "Por favor, insira um ID de conta válido.", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Cadastro Cliente");
             }
         });
 
-        voltarConsultaContaButton.addActionListener(new ActionListener() {
+        cadastrarContaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout) mainPanel.getLayout();
-                cl.show(mainPanel, "Tela Cliente");
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Cadastro Conta");
+            }
+        });
+
+        // Adicionando os ActionListeners para os botões da tela de cadastro de cliente
+        voltarCadastroClienteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Gerente");
             }
         });
 
         cadastrarClienteFinalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nomeCliente = nomeClienteField.getText();
-                String cpf = cpfField.getText();
-                String telefone = telefoneField.getText();
-                String cep = cepField.getText();
+                // Implementar ação para cadastrar cliente
+            }
+        });
 
-                int idConta = new Random().nextInt(901) + 100; // Gera um ID de conta aleatório
-
-                ContaBancaria conta = new ContaBancaria(idConta, "", nomeCliente, "", "");
-
-                contas.put(idConta, conta); // Adiciona a conta ao mapa de contas
-
-                String mensagem = "Cliente cadastrado com sucesso!\n" +
-                        "Nome: " + nomeCliente + "\n" +
-                        "CPF: " + cpf + "\n" +
-                        "Telefone: " + telefone + "\n" +
-                        "CEP: " + cep + "\n" +
-                        "ID da Conta: " + idConta;
-
-                JOptionPane.showMessageDialog(BancoSistema.this, mensagem, "Cadastro de Cliente", JOptionPane.INFORMATION_MESSAGE);
+        // Adicionando os ActionListeners para os botões da tela de cadastro de conta
+        voltarCadastroContaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                cardLayout.show(mainPanel, "Tela Gerente");
             }
         });
 
         cadastrarContaFinalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String tipoConta = contaCorrenteButton.isSelected() ? "Conta Corrente" : "Poupança";
-                String nomeCliente = nomeClienteContaField.getText();
-                String numeroAgencia = numeroAgenciaField.getText();
-                String numeroConta = numeroContaField.getText();
-
-                int idConta = new Random().nextInt(901) + 100;
-
-                ContaBancaria conta = new ContaBancaria(idConta, tipoConta, nomeCliente, numeroAgencia, numeroConta);
-
-                contas.put(idConta, conta); // Adiciona a conta ao mapa de contas
-
-                String mensagem = "Conta cadastrada com sucesso!\n" +
-                        "Tipo de Conta: " + tipoConta + "\n" +
-                        "Nome do Cliente: " + nomeCliente + "\n" +
-                        "Número da Agência: " + numeroAgencia + "\n" +
-                        "Número da Conta: " + numeroConta + "\n" +
-                        "ID da Conta: " + idConta;
-
-                JOptionPane.showMessageDialog(BancoSistema.this, mensagem, "Cadastro de Conta", JOptionPane.INFORMATION_MESSAGE);
+                // Implementar ação para cadastrar conta
             }
         });
+
+        // Configurações finais do JFrame
+        add(mainPanel);
+        setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new BancoSistema().setVisible(true);
-            }
-        });
-    }
-}
-
-class ContaBancaria {
-    private int id;
-    private String tipoConta;
-    private String nomeCliente;
-    private String numeroAgencia;
-    private String numeroConta;
-
-    public ContaBancaria(int id, String tipoConta, String nomeCliente, String numeroAgencia, String numeroConta) {
-        this.id = id;
-        this.tipoConta = tipoConta;
-        this.nomeCliente = nomeCliente;
-        this.numeroAgencia = numeroAgencia;
-        this.numeroConta = numeroConta;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTipoConta() {
-        return tipoConta;
-    }
-
-    public String getNomeCliente() {
-        return nomeCliente;
-    }
-
-    public String getNumeroAgencia() {
-        return numeroAgencia;
-    }
-
-    public String getNumeroConta() {
-        return numeroConta;
-    }
+    //public static void main(String[] args) {
+        //SwingUtilities.invokeLater(new Runnable() {
+            //@Override
+            //public void run() {
+               // new BancoSistema();
+           // }
+       // });
+   // }
 }
